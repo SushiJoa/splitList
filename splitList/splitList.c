@@ -26,25 +26,7 @@ ListNode* insert_first(ListNode* head, element value) // int? element?
     head = p;
     return head;
 }
-//노드pre뒤에 새로운 노드 삽입
-ListNode* insert(ListNode* head, ListNode* pre, element value)
-{
-    ListNode* p = (ListNode*)malloc(sizeof(ListNode)); // (1)
-    p->data = value;
-    p->next = pre->next;
-    pre->next = p;
-    return head;
-}
-ListNode* delete_first(ListNode* head)
-{
-    ListNode* removed;
-    if (head == NULL) return NULL;
-    removed = head; // (1) 
-    head = removed->next; //(2) 
-    free(removed); // (3) 
-    return head;
-}
-// 노드를 삭제하고 해당노드의 값을 반환한다.
+// 삭제할 노드의 앞,뒤 노드를 연결한후 삭제한뒤 반환하는 함수
 element delete(ListNode** head, ListNode* cur)
 {
     ListNode* removed;
@@ -67,7 +49,7 @@ element delete(ListNode** head, ListNode* cur)
         return rdata;
     }
 }
-// 노드를 삭제하고 해당노드의 값을 반환한다.
+// 노드를 삭제하고 해당노드의 값을 반환하는 함수
 element delete_only(ListNode* cur)
 {
     element rdata;
@@ -76,15 +58,6 @@ element delete_only(ListNode* cur)
     rdata = cur->data;
     free(cur);
     return rdata;
-}
-// pre가 가리키는 노드의 다음 노드를 삭제한다.
-ListNode* delete_bak(ListNode* head, ListNode* pre)
-{
-    ListNode* removed;
-    removed = pre->next; // (1) 
-    pre->next = removed->next; // (2) 
-    free(removed); // (3) 
-    return head;
 }
 void print_list(ListNode* head) {
     if (head == NULL) {
@@ -114,7 +87,7 @@ ListNode* search(ListNode* head, char* word)
     }
     return NULL;
 }
-// cur노드 기준 head1 2로 나누고
+// 삭제할 단어를 기준으로 리스트 앞, 뒤로 나누는 함수
 ListNode* split_list(ListNode** head, ListNode** head_split, ListNode* cur)
 {
     if (cur == NULL) return NULL;
@@ -138,8 +111,8 @@ int main(void)
     ListNode* tmp = NULL;
     element rdata;
 
-    // APPLE -> KIWI -> BANANA -> LEMON -> MANGO -> MELON -> PEACH 
-
+    // head -> APPLE -> KIWI -> BANANA -> LEMON -> MANGO -> MELON -> PEACH 
+    // 단어들을 리스트에 추가
     head1 = insert_first(head1, "PEACH");
     head1 = insert_first(head1, "MELON");
     head1 = insert_first(head1, "MANGO");
@@ -148,12 +121,10 @@ int main(void)
     head1 = insert_first(head1, "KIWI");
     head1 = insert_first(head1, "APPLE");
 
-
     printf("head -> ");
     print_list(head1);
 
-
-    cur = search(head1, "NULL");
+    cur = search(head1, "LEMON");
     split_list(&head1, &head2, cur);
     rdata = delete_only(cur);
     printf("rdata: %s\n", rdata);
@@ -167,14 +138,14 @@ int main(void)
     cur = head1;
     while (cur != NULL) {
         tmp = cur;
-        free(tmp);
         cur = cur->next;
+        free(tmp);
     }
     cur = head2;
     while (cur != NULL) {
         tmp = cur;
-        free(tmp);
         cur = cur->next;
+        free(tmp);
     }
     return 0;
 }
